@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vault
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://helm.releases.hashicorp.com
+    chart: vault
+    targetRevision: 0.32.0
+    helm:
+      valuesObject:
+        server:
+          dev:
+            enabled: false    # never run dev mode, data is lost on restart
+          ha:
+            enabled: false    # single node homelab, don't need HA
+          dataStorage:
+            enabled: true
+            size: 1Gi
+        injector:
+          enabled: true       # sidecar that injects secrets into pods
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: vault
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
