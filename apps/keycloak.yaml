@@ -14,8 +14,6 @@ spec:
         replicas: 1
         command:
           - start
-        http:
-          relativePath: /auth
         ingress:
           enabled: true
           ingressClassName: cilium
