@@ -13,7 +13,10 @@ spec:
       valuesObject:
         replicas: 1
         command:
-          - start
+          - "/opt/keycloak/bin/kc.sh"
+          - "start"
+          - "--http-port=8080"
+          - "--hostname-strict=false"
         ingress:
           enabled: true
           ingressClassName: cilium
