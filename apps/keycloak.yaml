@@ -12,6 +12,8 @@ spec:
     helm:
       valuesObject:
         replicas: 1
+        command:
+          - start
         http:
           relativePath: /auth
         ingress:
