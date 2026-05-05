@@ -1,13 +1,15 @@
-server:
-  service:
-    type: ClusterIP
-
-configs:
-  cm:
-    url: "https://argocd.homelab.local"
-    oidc.config: |
-      name: Keycloak
-      issuer: https://keycloak.homelab.local/auth/realms/homelab
-      clientID: argocd
-      clientSecret: $oidc.keycloak.clientSecret
-      requestedScopes: ["openid", "profile", "email", "groups"]
+argo-cd:
+  server:
+    service:
+      type: ClusterIP
+  configs:
+    cm:
+      url: "https://argocd.homelab.local"
+      oidc.config: |
+        name: Keycloak
+        issuer: https://keycloak.homelab.local/auth/realms/homelab
+        clientID: argocd
+        clientSecret: $oidc.keycloak.clientSecret
+        requestedScopes: ["openid", "profile", "email", "groups"]
+    params:
+      server.insecure: "true"
