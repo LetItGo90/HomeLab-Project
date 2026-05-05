@@ -1,0 +1,28 @@
+kubeProxyReplacement: true
+l2announcements:
+  enabled: true
+hubble:
+  listenAddress: :4244
+  peerService:
+    enabled: true
+  relay:
+    enabled: true
+  tls:
+    auto:
+      certManagerIssuerRef:
+        group: cert-manager.io
+        kind: ClusterIssuer
+        name: vault-issuer
+      enabled: true
+      method: certmanager
+    enabled: true
+  ui:
+    enabled: false
+operator:
+  replicas: 1
+ingressController:
+  enabled: true
+  loadbalancerMode: shared
+  default: true
+k8sServiceHost: 192.168.44.186
+k8sServicePort: 6443
