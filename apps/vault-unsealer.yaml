@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vault-unsealer
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/LetItGo90/HomeLab-Project.git
+    targetRevision: main
+    path: infrastructure/vault/vault-unsealer
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: vault
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

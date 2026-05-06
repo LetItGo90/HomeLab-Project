@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vault-unsealer
+  namespace: vault
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vault-unsealer
+  template:
+    metadata:
+      labels:
+        app: vault-unsealer
+    spec:
+      containers:
+      - name: unsealer
+        image: hashicorp/vault:latest
+        command:
+        - /bin/sh
+        - -c
+        - |
+          while true; do
+            STATUS=$(vault status -format=json 2>/dev/null | grep -c '"sealed":true')
+            if [ "$STATUS" -gt "0" ]; then
+              echo "Vault is sealed, unsealing..."
+              vault operator unseal $KEY1
+            fi
+            sleep 30
+          done
+        env:
+        - name: VAULT_ADDR
+          value: http://vault.vault.svc.cluster.local:8200
+        - name: KEY1
+          valueFrom:
+            secretKeyRef:
+              name: vault-unseal-keys
+              key: key1
