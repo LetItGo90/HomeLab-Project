@@ -20,11 +20,17 @@ spec:
         ingress:
           enabled: true
           ingressClassName: cilium
+          annotations:
+            cert-manager.io/cluster-issuer: vault-issuer
           rules:
             - host: keycloak.homelab.local
               paths:
                 - path: /
                   pathType: Prefix
+          tls:
+            - hosts:
+                - keycloak.homelab.local
+              secretName: keycloak-tls
         extraEnv: |
           - name: KEYCLOAK_ADMIN
             value: admin
