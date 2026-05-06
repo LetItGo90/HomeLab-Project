@@ -2,6 +2,8 @@ argo-cd:
   server:
     service:
       type: ClusterIP
+  networkPolicy:
+    enabled: false
   configs:
     cm:
       url: "https://argocd.homelab.local"
