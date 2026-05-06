@@ -39,6 +39,10 @@ spec:
               secretKeyRef:
                 name: keycloak-admin
                 key: password
+          - name: KC_PROXY_headers
+            value: "xforwarded"
+          - name: KC_HOSTNAME
+            value: "https://keycloak.homelab.local"
   destination:
     server: https://kubernetes.default.svc
     namespace: keycloak
