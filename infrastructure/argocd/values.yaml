@@ -9,9 +9,25 @@ argo-cd:
       url: "https://argocd.homelab.local"
       oidc.config: |
         name: Keycloak
-        issuer: https://keycloak.homelab.local/auth/realms/homelab
+        issuer: https://keycloak.homelab.local/realms/homelab
         clientID: argocd
         clientSecret: $oidc.keycloak.clientSecret
-        requestedScopes: ["openid", "profile", "email", "groups"]
+        requestedScopes:
+          - openid
+          - profile
+          - email
+          - groups
+        rootCA: |
+          -----BEGIN CERTIFICATE-----
+          MIIBkzCCATigAwIBAgIUeQLlSOdxdx9azTXsHRsYaDK7WZwwCgYIKoZIzj0EAwIw
+          JzEQMA4GA1UEChMHaG9tZWxhYjETMBEGA1UEAxMKaG9tZWxhYi1jYTAeFw0yNjA0
+          MTYyMzE0NTRaFw0zNjA0MTMyMzE0NTRaMCcxEDAOBgNVBAoTB2hvbWVsYWIxEzAR
+          BgNVBAMTCmhvbWVsYWItY2EwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAATsW4DN
+          d5MJMAZwn0kVh/H3BgDg8tww+pbCGJBVx+Wt8ExF7xde+dVsQSjYWOh+TUTEWCOx
+          eG4SQMF2mcogTxPVo0IwQDAOBgNVHQ8BAf8EBAMCAqQwDwYDVR0TAQH/BAUwAwEB
+          /zAdBgNVHQ4EFgQU5v54/aaIK73MtnT3YZRPVciWM98wCgYIKoZIzj0EAwIDSQAw
+          RgIhAPXuxkRWt2R949WyrSZ7egtusJdkUBdL+fY+bcsjdaQcAiEAnz4wKAVPAs9b
+          G6LSAqCq74nyMWcdXxFcuYVke/UD/tw=
+          -----END CERTIFICATE-----
     params:
       server.insecure: "true"
