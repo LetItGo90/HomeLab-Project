@@ -17,6 +17,7 @@ spec:
           - "start"
           - "--http-port=8080"
           - "--hostname-strict=false"
+          - "--hostname-strict-https=false"
         ingress:
           enabled: true
           ingressClassName: cilium
@@ -39,10 +40,16 @@ spec:
               secretKeyRef:
                 name: keycloak-admin
                 key: password
-          - name: KC_PROXY_headers
+          - name: KC_PROXY_HEADERS
             value: "xforwarded"
           - name: KC_HOSTNAME
-            value: "https://keycloak.homelab.local"
+            value: "keycloak.homelab.local"
+          - name: KC_HTTP_ENABLED
+            value: "true"
+          - name: KC_HOSTNAME_STRICT
+            value: "false"
+          - name: KC_HOSTNAME_STRICT_HTTPS
+            value: "false"
   destination:
     server: https://kubernetes.default.svc
     namespace: keycloak
