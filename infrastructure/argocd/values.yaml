@@ -38,5 +38,11 @@ argo-cd:
           4oQI6dtbLaDrdbraFNGvnHWUqxA97MfX7+CguORzaUJBPfDwnRSqzG0PWmuJ2O+w
           izPKf6fif0UHT2F2HdS9EBqMy+3e
           -----END CERTIFICATE-----
+        rbac:
+    rbac:
+      policy.default: role:readonly
+      policy.csv: |
+        g, homelab-admins, role:admin
+        g, homelab-viewers, role:readonly
     params:
       server.insecure: "true"
