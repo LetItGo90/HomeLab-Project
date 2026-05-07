@@ -21,8 +21,8 @@ spec:
         - -c
         - |
           while true; do
-            STATUS=$(vault status -format=json 2>/dev/null | grep -c '"sealed":true')
-            if [ "$STATUS" -gt "0" ]; then
+            vault status 2>/dev/null
+            if [ $? -eq 2 ]; then
               echo "Vault is sealed, unsealing..."
               vault operator unseal $KEY1
             fi
