@@ -18,9 +18,9 @@ spec:
           - "--http-port=8080"
           - "--hostname-strict=false"
         proxy:
-          enabled: false        # prevents chart injecting deprecated KC_PROXY=forwarded
+          enabled: false
         http:
-          relativePath: "/"     # modern Keycloak Quarkus uses / not /auth
+          relativePath: "/"
         ingress:
           enabled: true
           ingressClassName: cilium
@@ -51,6 +51,27 @@ spec:
             value: "true"
           - name: KC_HOSTNAME_STRICT
             value: "false"
+          - name: KC_DB
+            value: postgres
+          - name: KC_DB_URL
+            value: jdbc:postgresql://keycloak-postgresql:5432/keycloak
+          - name: KC_DB_USERNAME
+            value: keycloak
+          - name: KC_DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: keycloak-postgres
+                key: password
+        postgresql:
+          enabled: true
+          auth:
+            username: keycloak
+            database: keycloak
+            existingSecret: keycloak-postgres
+          primary:
+            persistence:
+              enabled: true
+              size: 1Gi
   destination:
     server: https://kubernetes.default.svc
     namespace: keycloak
