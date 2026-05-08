@@ -54,7 +54,7 @@ spec:
           - name: KC_DB
             value: postgres
           - name: KC_DB_URL
-            value: jdbc:postgresql://keycloak-postgresql:5432/keycloak # gitleaks:allow
+            value: jdbc:postgresql://keycloak-postgres-postgresql:5432/keycloak #gitleaks:allow
           - name: KC_DB_USERNAME
             value: keycloak
           - name: KC_DB_PASSWORD
@@ -62,16 +62,6 @@ spec:
               secretKeyRef:
                 name: keycloak-postgres
                 key: password
-        postgresql:
-          enabled: true
-          auth:
-            username: keycloak
-            database: keycloak
-            existingSecret: keycloak-postgres
-          primary:
-            persistence:
-              enabled: true
-              size: 1Gi
   destination:
     server: https://kubernetes.default.svc
     namespace: keycloak
