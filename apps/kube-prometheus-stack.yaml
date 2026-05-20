@@ -23,6 +23,7 @@ spec:
             ingressClassName: cilium
             annotations:
               cert-manager.io/cluster-issuer: vault-issuer
+              cert-manager.io/common-name: keycloak.homelab.local
             hosts:
               - grafana.homelab.local
             tls:
