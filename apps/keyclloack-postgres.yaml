@@ -13,8 +13,11 @@ spec:
       valuesObject:
         image:
           registry: docker.io
-          repository: library/postgres
+          repository: bitnami/postgresql
           tag: latest
+        global:
+          imagePullSecrets:
+            - name: dockerhub-creds
         auth:
           username: keycloak
           database: keycloak
