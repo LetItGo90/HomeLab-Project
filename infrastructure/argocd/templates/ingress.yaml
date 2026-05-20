@@ -17,6 +17,9 @@ kind: Ingress
 metadata:
   name: argocd-server
   namespace: argocd
+annotations:
+  cert-manager.io/cluster-issuer: vault-issuer
+  ingress.kubernetes.io/force-https: "true"
 spec:
   ingressClassName: cilium
   tls:
