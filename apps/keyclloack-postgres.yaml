@@ -11,6 +11,9 @@ spec:
     targetRevision: 16.6.3
     helm:
       valuesObject:
+        global:
+          imagePullSecrets:
+            - name: dockerhub-creds
         auth:
           username: keycloak
           database: keycloak
