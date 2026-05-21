@@ -22,7 +22,7 @@ spec:
           serviceMonitor:
             enabled: true
             additionalLabels:
-              release: kube-prometheus-stack-prometheus
+              release: kube-prometheus-stack
           replicaCount: 1
           prometheusRules:
             enabled: true
@@ -38,3 +38,5 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+      - Replace=true
+      - ServerSideApply=true
