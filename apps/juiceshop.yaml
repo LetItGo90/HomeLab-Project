@@ -21,7 +21,7 @@ spec:
             - host: juice-shop.homelab.local
               paths:
                 - path: /
-                  pathType: Prefix
+                  pathType: ImplementationSpecific
           tls:
             - secretName: juice-shop-tls
               hosts:
