@@ -12,7 +12,7 @@ spec:
     helm:
       valuesObject:
         driver:
-          kind: ebpf
+          kind: modern_ebpf
 
         collectors:
           enabled: true
