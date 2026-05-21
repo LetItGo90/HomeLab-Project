@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: juice-shop
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: oci://ghcr.io/securecodebox/helm/juice-shop
+    chart: juice-shop
+    targetRevision: 19.2.1
+    helm:
+      valuesObject:
+        ingress:
+          enabled: true
+          ingressClassName: cilium
+          annotations:
+            cert-manager.io/cluster-issuer: vault-issuer
+            cert-manager.io/common-name: juice-shop.homelab.local
+          hosts:
+            - host: juice-shop.homelab.local
+              paths:
+                - path: /
+                  pathType: Prefix
+          tls:                                 
+            - secretName: juice-shop-tls
+              hosts:
+                - juice-shop.homelab.local
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: juice-shop       # ← not monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+      - Replace=true
