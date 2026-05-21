@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: oci://ghcr.io/securecodebox/helm/juice-shop
     chart: juice-shop
-    targetRevision: 19.2.1
+    targetRevision: 5.7.0
     helm:
       valuesObject:
         ingress:
