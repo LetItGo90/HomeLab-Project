@@ -1,1 +1,40 @@
-#to do
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: falco
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://falcosecurity.github.io/charts
+    chart: falco
+    targetRevision: 4.21.2
+    helm:
+      valuesObject:
+        driver:
+          kind: ebpf
+
+        collectors:
+          enabled: true
+
+        falcosidekick:
+          enabled: true
+          serviceMonitor:
+            enabled: true
+            additionalLabels:
+              release: kube-prometheus-stack-prometheus
+          replicaCount: 1
+          prometheusRules:
+            enabled: true
+          webui:
+            enabled: false
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: falco
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
