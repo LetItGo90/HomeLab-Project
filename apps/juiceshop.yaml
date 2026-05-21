@@ -13,7 +13,7 @@ spec:
       valuesObject:
         ingress:
           enabled: true
-          ingressClassName: cilium
+          className: cilium
           annotations:
             cert-manager.io/cluster-issuer: vault-issuer
             cert-manager.io/common-name: juice-shop.homelab.local
@@ -22,13 +22,13 @@ spec:
               paths:
                 - path: /
                   pathType: Prefix
-          tls:                                 
+          tls:
             - secretName: juice-shop-tls
               hosts:
                 - juice-shop.homelab.local
   destination:
     server: https://kubernetes.default.svc
-    namespace: juice-shop       # ← not monitoring
+    namespace: juice-shop
   syncPolicy:
     automated:
       prune: true
