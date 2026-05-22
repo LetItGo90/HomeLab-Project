@@ -13,9 +13,8 @@ spec:
       valuesObject:
         splunk-operator:
           enabled: false
-        s1:
-          enabled: true
         standalone:
+          enabled: true
           name: splunk
           resources:
             requests:

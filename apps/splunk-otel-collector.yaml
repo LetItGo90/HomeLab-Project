@@ -1,1 +1,43 @@
-#placeholder
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: splunk-otel-collector
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://signalfx.github.io/splunk-otel-collector-chart
+    chart: splunk-otel-collector
+    targetRevision: 0.152.0
+    helm:
+      valuesObject:
+        splunkPlatform:
+          token: "OTEL_COLLECTOR_TOKEN"
+          endpoint: https://splunk-hec.homelab.local
+          index: "otel-collector"
+          insecureSkipVerify: true
+        logsEngine: otel
+        logsCollection:
+          containers:
+            enabled: true
+          journald:
+            enabled: true
+        splunkObservability:
+          enabled: false
+        clusterReceiver:
+          enabled: true
+          clusterReceiverConfig:
+            clusterReceiverConfigMapName: splunk-otel-collector-cluster-receiver-config
+        agent:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: splunk
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+      - Replace=true
