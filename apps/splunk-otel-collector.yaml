@@ -11,6 +11,7 @@ spec:
     targetRevision: 0.152.0
     helm:
       valuesObject:
+        clusterName: "homelab"
         secret:
           create: false
           name: splunk-otel-secret
@@ -24,8 +25,6 @@ spec:
             enabled: true
           journald:
             enabled: true
-        splunkObservability:
-          enabled: false
         clusterReceiver:
           enabled: true
         agent:
