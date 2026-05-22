@@ -23,7 +23,7 @@ spec:
             ingressClassName: cilium
             annotations:
               cert-manager.io/cluster-issuer: vault-issuer
-              cert-manager.io/common-name: keycloak.homelab.local
+              cert-manager.io/common-name: grafana.homelab.local
             hosts:
               - grafana.homelab.local
             tls:
@@ -32,7 +32,7 @@ spec:
                   - grafana.homelab.local
         prometheus:
           prometheusSpec:
-            retention: 7d
+            retention: 1d
             resources:
               requests:
                 memory: 400Mi
@@ -54,3 +54,4 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - ServerSideApply=true
+      - Replace=true

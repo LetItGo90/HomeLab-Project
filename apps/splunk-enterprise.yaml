@@ -1,0 +1,69 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: splunk-enterprise
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://splunk.github.io/splunk-operator
+    chart: splunk-enterprise
+    targetRevision: 3.1.0
+    helm:
+      valuesObject:
+        splunk-operator:
+          enabled: false
+        s1:
+          enabled: true
+        standalone:
+          name: splunk
+          resources:
+            requests:
+              cpu: 250m
+              memory: 2Gi
+            limits:
+              cpu: "1"
+              memory: 3Gi
+          etcVolumeStorageConfig:
+            storageCapacity: 5Gi
+          varVolumeStorageConfig:
+            storageCapacity: 20Gi
+          ingress:
+            enabled: true
+            ingressClassName: cilium
+            annotations:
+              cert-manager.io/cluster-issuer: vault-issuer
+              cert-manager.io/common-name: splunk.homelab.local
+            rules:
+              - host: splunk.homelab.local
+                paths:
+                  - path: /
+                    pathType: Prefix
+                    backend:
+                      service:
+                        port: 8000
+              - host: splunk-hec.homelab.local
+                paths:
+                  - path: /services/collector
+                    pathType: Prefix
+                    backend:
+                      service:
+                        port: 8088
+            tls:
+              - secretName: splunk-tls
+                hosts:
+                  - splunk.homelab.local
+              - secretName: splunk-hec-tls
+                hosts:
+                  - splunk-hec.homelab.local
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: splunk
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+      - Replace=true
