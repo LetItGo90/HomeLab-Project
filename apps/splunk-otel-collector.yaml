@@ -10,25 +10,26 @@ spec:
     chart: splunk-otel-collector
     targetRevision: 0.152.0
     helm:
-      valuesObject:
-        clusterName: "homelab"
-        secret:
-          create: false
-          name: splunk-otel-secret
-        splunkPlatform:
-          endpoint: https://splunk-hec.homelab.local
-          index: "main"
-          insecureSkipVerify: true
-        logsEngine: otel
-        logsCollection:
-          containers:
-            enabled: true
-          journald:
-            enabled: true
-        clusterReceiver:
-          enabled: true
-        agent:
-          enabled: true
+  valuesObject:
+    clusterName: "homelab"          # ← add this, required
+    secret:
+      create: false
+      name: splunk-otel-secret
+    splunkPlatform:
+      endpoint: https://splunk-hec.homelab.local
+      index: "main"
+      insecureSkipVerify: true
+    logsEngine: otel
+    logsCollection:
+      containers:
+        enabled: true
+      journald:
+        enabled: true
+    # splunkObservability block removed entirely ← fix
+    clusterReceiver:
+      enabled: true
+    agent:
+      enabled: true
   destination:
     server: https://kubernetes.default.svc
     namespace: splunk
