@@ -1,0 +1,38 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: splunk-ingress
+  namespace: splunk
+  annotations:
+    cert-manager.io/cluster-issuer: vault-issuer
+    cert-manager.io/common-name: splunk.homelab.local
+spec:
+  ingressClassName: cilium
+  tls:
+    - secretName: splunk-tls
+      hosts:
+        - splunk.homelab.local
+    - secretName: splunk-hec-tls
+      hosts:
+        - splunk-hec.homelab.local
+  rules:
+    - host: splunk.homelab.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: splunk-splunk-standalone-service
+                port:
+                  number: 8000
+    - host: splunk-hec.homelab.local
+      http:
+        paths:
+          - path: /services/collector
+            pathType: Prefix
+            backend:
+              service:
+                name: splunk-splunk-standalone-service
+                port:
+                  number: 8088
