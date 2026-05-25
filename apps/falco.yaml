@@ -18,6 +18,16 @@ spec:
           enabled: true
 
         falcosidekick:
+          config:
+            splunk:
+              host: "https://splunk-splunk-standalone-service.splunk.svc.cluster.local:8088"
+              checkcert: false
+          extraEnv:
+            - name: FALCOSIDEKICK_CONFIG_SPLUNK_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: falcosidekick-splunk
+                  key: splunk-token
           enabled: true
           serviceMonitor:
             enabled: true
