@@ -16,6 +16,9 @@ spec:
         standalone:
           enabled: true
           name: splunk
+          extraEnv:
+            - name: SPLUNK_GENERAL_TERMS
+              value: "--accept-sgt-current-at-splunk-com"
           resources:
             requests:
               cpu: 250m
@@ -37,4 +40,3 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - ServerSideApply=true
-      - Replace=true
