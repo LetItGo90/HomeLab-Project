@@ -18,7 +18,7 @@ spec:
         splunkPlatform:
           endpoint: https://splunk-splunk-standalone-service.splunk.svc.cluster.local:8088
           insecureSkipVerify: true
-          index: ""
+          index: main
         logsEngine: otel
         logsCollection:
           containers:
@@ -29,40 +29,6 @@ spec:
           enabled: true
         agent:
           enabled: true
-          config:
-            processors:
-              filter/security_namespaces:
-                logs:
-                  include:
-                    match_type: strict
-                    resource_attributes:
-                      - key: k8s.namespace.name
-                        value: falco
-                      - key: k8s.namespace.name
-                        value: keycloak
-                      - key: k8s.namespace.name
-                        value: tetragon
-                      - key: k8s.namespace.name
-                        value: splunk
-              transform/index_routing:
-                log_statements:
-                  - context: log
-                    statements:
-                      - set(resource.attributes["com.splunk.index"], "falco") where resource.attributes["k8s.namespace.name"] == "falco"
-                      - set(resource.attributes["com.splunk.index"], "keycloak-auth") where resource.attributes["k8s.namespace.name"] == "keycloak"
-                      - set(resource.attributes["com.splunk.index"], "tetragon") where resource.attributes["k8s.namespace.name"] == "tetragon"
-                      - set(resource.attributes["com.splunk.index"], "main") where resource.attributes["k8s.namespace.name"] == "splunk"
-            service:
-              pipelines:
-                logs:
-                  processors:
-                    - memory_limiter
-                    - filter/security_namespaces
-                    - batch
-                    - resourcedetection
-                    - resource
-                    - resource/logs
-                    - transform/index_routing
   destination:
     server: https://kubernetes.default.svc
     namespace: splunk
