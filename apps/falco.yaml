@@ -9,37 +9,28 @@ spec:
     repoURL: https://falcosecurity.github.io/charts
     chart: falco
     targetRevision: 4.21.2
-    plugin:
-      name: argocd-vault-plugin-helm
-      env:
-        - name: HELM_REPO
-          value: https://falcosecurity.github.io/charts
-        - name: HELM_CHART
-          value: falco
-        - name: HELM_VERSION
-          value: 4.21.2
-        - name: HELM_VALUES
-          value: |
-            driver:
-              kind: modern_ebpf
-            collectors:
-              enabled: true
-            falcosidekick:
-              enabled: true
-              config:
-                splunk:
-                  host: "https://splunk-splunk-standalone-service.splunk.svc.cluster.local:8088"
-                  token: <path:secret/data/falco#splunk-token>
-                  checkcert: false
-              serviceMonitor:
-                enabled: true
-                additionalLabels:
-                  release: kube-prometheus-stack
-              replicaCount: 1
-              prometheusRules:
-                enabled: true
-              webui:
-                enabled: false
+    helm:
+      values: |
+        driver:
+          kind: modern_ebpf
+        collectors:
+          enabled: true
+        falcosidekick:
+          enabled: true
+          config:
+            splunk:
+              host: "https://splunk-splunk-standalone-service.splunk.svc.cluster.local:8088"
+              checkcert: false
+          existingSecret: falcosidekick-splunk
+          serviceMonitor:
+            enabled: true
+            additionalLabels:
+              release: kube-prometheus-stack
+          replicaCount: 1
+          prometheusRules:
+            enabled: true
+          webui:
+            enabled: false
   destination:
     server: https://kubernetes.default.svc
     namespace: falco
