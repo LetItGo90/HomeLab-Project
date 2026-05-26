@@ -48,9 +48,9 @@ spec:
                 log_statements:
                   - context: log
                     statements:
-                      - set(attributes["com.splunk.index"], "falco") where resource.attributes["k8s.namespace.name"] == "falco"
-                      - set(attributes["com.splunk.index"], "keycloak-auth") where resource.attributes["k8s.namespace.name"] == "keycloak"
-                      - set(attributes["com.splunk.index"], "tetragon") where resource.attributes["k8s.namespace.name"] == "tetragon"
+                      - set(resource.attributes["com.splunk.index"], "falco") where resource.attributes["k8s.namespace.name"] == "falco"
+                      - set(resource.attributes["com.splunk.index"], "keycloak-auth") where resource.attributes["k8s.namespace.name"] == "keycloak"
+                      - set(resource.attributes["com.splunk.index"], "tetragon") where resource.attributes["k8s.namespace.name"] == "tetragon"
             service:
               pipelines:
                 logs:
