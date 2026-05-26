@@ -20,8 +20,8 @@ spec:
           config:
             splunk:
               host: "https://splunk-splunk-standalone-service.splunk.svc.cluster.local:8088"
+              token: "595cd2ec-9afb-4613-969e-5f4ff7885b87"
               checkcert: false
-          existingSecret: falcosidekick-splunk
           serviceMonitor:
             enabled: true
             additionalLabels:
