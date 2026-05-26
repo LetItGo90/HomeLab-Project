@@ -38,12 +38,13 @@ data:
             - "find . -name 'Chart.yaml' 2>/dev/null"
       generate:
         command:
-          - bash                          # <-- was sh
+          - bash
           - "-c"
           - |
             helm template $ARGOCD_APP_NAME $ARGOCD_ENV_HELM_CHART \
               --repo $ARGOCD_ENV_HELM_REPO \
               --version $ARGOCD_ENV_HELM_VERSION \
+              --namespace $ARGOCD_APP_NAMESPACE \
               -f <(echo "$ARGOCD_ENV_HELM_VALUES") | \
               argocd-vault-plugin generate -
       lockRepo: false
