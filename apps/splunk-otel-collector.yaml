@@ -18,6 +18,7 @@ spec:
         splunkPlatform:
           endpoint: https://splunk-splunk-standalone-service.splunk.svc.cluster.local:8088
           insecureSkipVerify: true
+          index: ""
         logsEngine: otel
         logsCollection:
           containers:
