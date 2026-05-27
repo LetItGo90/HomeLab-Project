@@ -16,11 +16,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install sigma
-        run: |
-          pip install --quiet sigma-cli
-          echo "N" | sigma plugin install splunk || true
-
       - name: Generate savedsearches.conf
         run: |
           sigma convert \
