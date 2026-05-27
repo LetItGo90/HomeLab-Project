@@ -7,11 +7,5 @@ transformations:
       sourcetype: "kube:container:falco"
     rule_conditions:
       - type: logsource
-        product: falco
-  - id: falco_clear_logsource
-    type: change_logsource
-    product: null
-    service: null
-    rule_conditions:
-      - type: logsource
-        product: falco
+        product: linux
+        service: syslog

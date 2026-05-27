@@ -9,8 +9,8 @@ tags:
   - attack.credential_access
   - attack.t1003
 logsource:
-  product: falco
-  service: kube-container
+  product: linux
+  service: syslog
 detection:
   selection:
     output_fields.fd.name: '/etc/shadow'
