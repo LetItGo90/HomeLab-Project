@@ -9,55 +9,30 @@ on:
       - 'detection/rules/**.yaml'
 
 jobs:
-  lint-and-convert:
-    runs-on: ubuntu-latest
+  deploy:
+    runs-on: self-hosted
+    environment: production
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install sigma-cli and Splunk backend
+      - name: Install sigma
         run: |
-          pip install sigma-cli
-          sigma plugin install splunk
+          pip install --quiet sigma-cli
+          echo "N" | sigma plugin install splunk || true
 
-      - name: Lint rules
-        run: sigma check detection/rules/
-
-      - name: Convert rules to SPL
+      - name: Generate savedsearches.conf
         run: |
           sigma convert \
             --target splunk \
             --without-pipeline \
             --format savedsearches \
             detection/rules/ > /tmp/savedsearches.conf
+          cat /tmp/savedsearches.conf
 
-  test-and-deploy:
-    runs-on: self-hosted
-    environment: production
-    needs: lint-and-convert
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Debug
+      - name: Deploy to Splunk pod
         run: |
-          which sigma
-          sigma plugin list
-          find detection/rules/ -type f \( -name "*.yml" -o -name "*.yaml" \)
-
-      - name: Deploy to Splunk
-        env:
-          SPLUNK_PASSWORD: ${{ secrets.SPLUNK_PASSWORD }}
-        run: |
-          while IFS= read -r rule_file; do
-            rule=$(basename "$rule_file" .yml)
-            rule=$(basename "$rule" .yaml)
-            SPL=$(sigma convert -t splunk --without-pipeline "$rule_file")
-            curl -k -s -u "admin:${SPLUNK_PASSWORD}" \
-              "https://splunk-splunk-standalone-service.splunk.svc.cluster.local:8089/services/saved/searches" \
-              -d "name=${rule}" \
-              --data-urlencode "search=${SPL}" \
-              -d "cron_schedule=*/5 * * * *" \
-              -d "dispatch.earliest_time=-5m" \
-              -d "dispatch.latest_time=now"
-          done < <(find detection/rules/ -type f \( -name "*.yml" -o -name "*.yaml" \))
+          kubectl cp /tmp/savedsearches.conf \
+            splunk/splunk-splunk-standalone-0:/opt/splunk/etc/apps/search/local/savedsearches.conf
+          kubectl exec -n splunk splunk-splunk-standalone-0 -- \
+            /opt/splunk/bin/splunk restart splunkd

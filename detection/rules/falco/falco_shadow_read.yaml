@@ -16,3 +16,5 @@ detection:
   condition: selection
 level: high
 #testing:
+#  - test1:
+#      name: Test with a known read of /etc/shadow
