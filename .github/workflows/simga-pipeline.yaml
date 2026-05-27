@@ -39,6 +39,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Debug
+        run: |
+          which sigma
+          sigma --version
+          sigma plugin list
+          find detection/rules/ -type f \( -name "*.yml" -o -name "*.yaml" \)
+
       - name: Deploy to Splunk
         env:
           SPLUNK_PASSWORD: ${{ secrets.SPLUNK_PASSWORD }}

@@ -16,4 +16,4 @@ detection:
   condition: selection
 level: high
 #testing:
-#  - command: "falco -r /path/to/falco_rules.yaml -
+#  - command: "falco -r /path/to/falc
