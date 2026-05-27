@@ -16,3 +16,4 @@ detection:
     output_fields.evt.type: 'openat'
   condition: selection
 level: high
+#tips
