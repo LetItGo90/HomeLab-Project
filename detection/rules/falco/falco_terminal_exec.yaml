@@ -22,4 +22,3 @@ detection:
     output_fields.container.id: "host"
   condition: selection and not filter
 level: medium
-#tes
