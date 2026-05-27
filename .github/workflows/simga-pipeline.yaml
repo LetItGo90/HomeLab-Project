@@ -42,7 +42,6 @@ jobs:
       - name: Debug
         run: |
           which sigma
-          sigma --version
           sigma plugin list
           find detection/rules/ -type f \( -name "*.yml" -o -name "*.yaml" \)
 
