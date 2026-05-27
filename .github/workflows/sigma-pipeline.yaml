@@ -20,7 +20,7 @@ jobs:
       - name: Generate savedsearches.conf
         run: |
           set -euo pipefail
-          pip install pySigma-backend-splunk -q
+          pip install pySigma-backend-splunk -q --break-system-packages
           python3 detection/scripts/convert_splunk.py | tee /tmp/savedsearches.conf
           cat /tmp/savedsearches.conf
           grep -v '^\[default\]' /tmp/savedsearches.conf | grep -q '^\[' || \
