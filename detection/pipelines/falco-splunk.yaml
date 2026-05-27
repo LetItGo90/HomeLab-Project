@@ -1,10 +1,17 @@
 name: Falco Splunk Pipeline
 priority: 20
 transformations:
-  - id: falco_logsource
+  - id: falco_add_sourcetype
     type: add_condition
     conditions:
       sourcetype: "kube:container:falco"
+    rule_conditions:
+      - type: logsource
+        product: falco
+  - id: falco_clear_logsource
+    type: change_logsource
+    product: null
+    service: null
     rule_conditions:
       - type: logsource
         product: falco

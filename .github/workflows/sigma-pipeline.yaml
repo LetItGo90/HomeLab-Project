@@ -20,41 +20,18 @@ jobs:
       - name: Generate savedsearches.conf
         run: |
           set -euo pipefail
-
-          echo "=== Pipeline content ==="
-          cat detection/pipelines/falco-splunk.yaml
-
-          echo "=== Line ending check ==="
-          file detection/rules/falco/*.yaml
-          file detection/pipelines/falco-splunk.yaml
-
-          echo "=== Single file test (no pipeline) ==="
-          sigma convert \
-            --target splunk \
-            --without-pipeline \
-            --format savedsearches \
-            detection/rules/falco/falco_shadow_read.yaml
-
-          echo "=== Single file test (with pipeline) ==="
-          sigma convert \
-            --target splunk \
-            --pipeline detection/pipelines/falco-splunk.yaml \
-            --format savedsearches \
-            detection/rules/falco/falco_shadow_read.yaml
-
-          echo "=== Full directory convert ==="
+          sed -i 's/\r//' detection/pipelines/falco-splunk.yaml
+          sed -i 's/\r//' detection/rules/falco/*.yaml
           sigma convert \
             --target splunk \
             --pipeline detection/pipelines/falco-splunk.yaml \
             --format savedsearches \
             detection/rules/falco/ \
             2>/tmp/sigma-errors.txt | tee /tmp/savedsearches.conf
-
-          echo "=== Real sigma errors (CRLF stripped) ==="
-          tr '\r' '\n' < /tmp/sigma-errors.txt | grep -v '^$'
-
-          echo "=== savedsearches.conf ==="
+          tr '\r' '\n' < /tmp/sigma-errors.txt | grep -v '^$' || true
           cat /tmp/savedsearches.conf
+          grep -v '^\[default\]' /tmp/savedsearches.conf | grep -q '^\[' || \
+            { echo "ERROR: No rules converted"; exit 1; }
 
       - name: Deploy to Splunk pod
         env:
