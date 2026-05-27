@@ -20,7 +20,7 @@ jobs:
         run: |
           sigma convert \
             --target splunk \
-            --pipeline detection/pipelines/homelab-splunk.yml \
+            ----pipeline detection/pipelines/falco-splunk.yaml \
             --format savedsearches \
             detection/rules/ > /tmp/savedsearches.conf
           cat /tmp/savedsearches.conf
