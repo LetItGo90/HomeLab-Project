@@ -24,7 +24,7 @@ jobs:
           sed -i 's/\r//' detection/rules/falco/*.yaml
           sigma convert \
             --target splunk \
-            --pipeline detection/pipelines/falco-splunk.yaml \
+            --without-pipeline \
             --format savedsearches \
             detection/rules/falco/ \
             2>/tmp/sigma-errors.txt | tee /tmp/savedsearches.conf
