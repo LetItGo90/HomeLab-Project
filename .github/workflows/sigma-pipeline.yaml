@@ -18,11 +18,17 @@ jobs:
 
       - name: Generate savedsearches.conf
         run: |
+          echo "=== Files in rules dir ==="
+          ls -la detection/rules/falco/
+          echo "=== Sigma output ==="
           sigma convert \
             --target splunk \
             --pipeline detection/pipelines/falco-splunk.yaml \
             --format savedsearches \
-            detection/rules/falco/ > /tmp/savedsearches.conf
+            detection/rules/falco/ > /tmp/savedsearches.conf 2>/tmp/sigma-errors.txt
+          echo "=== Sigma errors ==="
+          cat /tmp/sigma-errors.txt
+          echo "=== savedsearches.conf ==="
           cat /tmp/savedsearches.conf
 
       - name: Deploy to Splunk pod
