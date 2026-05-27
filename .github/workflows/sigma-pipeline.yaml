@@ -22,7 +22,7 @@ jobs:
             --target splunk \
             --pipeline detection/pipelines/falco-splunk.yaml \
             --format savedsearches \
-            detection/rules/ > /tmp/savedsearches.conf
+            detection/rules/falco/ > /tmp/savedsearches.conf
           cat /tmp/savedsearches.conf
 
       - name: Deploy to Splunk pod
