@@ -16,4 +16,3 @@ detection:
   condition: selection
 level: high
 #testing:
-#  - test1:
