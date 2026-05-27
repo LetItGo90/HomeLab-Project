@@ -20,16 +20,42 @@ jobs:
       - name: Generate savedsearches.conf
         run: |
           set -euo pipefail
-          echo "=== Files in rules dir ==="
-          ls -la detection/rules/falco/
-          echo "=== Sigma output ==="
+
+          echo "=== Sigma version ==="
+          sigma --version
+
+          echo "=== Pipeline content ==="
+          cat detection/pipelines/falco-splunk.yaml
+
+          echo "=== Line ending check ==="
+          file detection/rules/falco/*.yaml
+          file detection/pipelines/falco-splunk.yaml
+
+          echo "=== Single file test (no pipeline) ==="
+          sigma convert \
+            --target splunk \
+            --without-pipeline \
+            --format savedsearches \
+            detection/rules/falco/falco_shadow_read.yaml
+
+          echo "=== Single file test (with pipeline) ==="
           sigma convert \
             --target splunk \
             --pipeline detection/pipelines/falco-splunk.yaml \
             --format savedsearches \
-            detection/rules/falco/ > /tmp/savedsearches.conf 2>/tmp/sigma-errors.txt
-          echo "=== Sigma errors ==="
-          cat /tmp/sigma-errors.txt
+            detection/rules/falco/falco_shadow_read.yaml
+
+          echo "=== Full directory convert ==="
+          sigma convert \
+            --target splunk \
+            --pipeline detection/pipelines/falco-splunk.yaml \
+            --format savedsearches \
+            detection/rules/falco/ \
+            2>/tmp/sigma-errors.txt | tee /tmp/savedsearches.conf
+
+          echo "=== Real sigma errors (CRLF stripped) ==="
+          tr '\r' '\n' < /tmp/sigma-errors.txt | grep -v '^$'
+
           echo "=== savedsearches.conf ==="
           cat /tmp/savedsearches.conf
 
