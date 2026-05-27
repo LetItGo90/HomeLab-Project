@@ -26,6 +26,8 @@ jobs:
           cat /tmp/savedsearches.conf
 
       - name: Deploy to Splunk pod
+        env:
+          SPLUNK_PASSWORD: ${{ secrets.SPLUNK_PASSWORD }}
         run: |
           kubectl cp /tmp/savedsearches.conf \
             splunk/splunk-splunk-standalone-0:/opt/splunk/etc/apps/search/local/savedsearches.conf

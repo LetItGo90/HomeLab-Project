@@ -13,12 +13,12 @@ logsource:
 detection:
   selection:
     output_fields.proc.name|contains:
-      - 'bash'
-      - 'sh'
-      - 'zsh'
+      - "bash"
+      - "sh"
+      - "zsh"
     output_fields.proc.tty|gt: 0
   filter:
-    output_fields.container.id: 'host'
+    output_fields.container.id: "host"
   condition: selection and not filter
 level: medium
-#test2
+#tes
