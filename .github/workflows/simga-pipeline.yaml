@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'detection/rules/**.yml'
+      - 'detection/rules/**.yaml'
 
 jobs:
   lint-and-convert:
