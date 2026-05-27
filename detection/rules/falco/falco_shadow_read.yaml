@@ -1,7 +1,7 @@
-title: Sensitive File Read via Falco
+title: Sensitive File Read - /etc/shadow
 id: a1b2c3d4-e5f6-7890-abcd-ef1234567890
 status: experimental
-description: Detects when a process reads /etc/shadow, caught by Falco
+description: Detects a process reading /etc/shadow via openat syscall
 author: you
 date: 2025-01-01
 tags:
@@ -9,10 +9,10 @@ tags:
   - attack.t1003
 logsource:
   product: falco
-  service: container
+  service: kube-container
 detection:
   selection:
-    rule: 'Read sensitive file untrusted'
+    output_fields.fd.name: '/etc/shadow'
+    output_fields.evt.type: 'openat'
   condition: selection
 level: high
-#testing:

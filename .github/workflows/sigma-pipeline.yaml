@@ -20,7 +20,7 @@ jobs:
         run: |
           sigma convert \
             --target splunk \
-            --pipeline splunk_cim \
+            --pipeline detection/pipelines/homelab-splunk.yml \
             --format savedsearches \
             detection/rules/ > /tmp/savedsearches.conf
           cat /tmp/savedsearches.conf
