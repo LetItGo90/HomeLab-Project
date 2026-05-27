@@ -15,4 +15,5 @@ detection:
     rule: 'Read sensitive file untrusted'
   condition: selection
 level: high
-#testing
+#testing:
+#  - command: "falco -r /path/to/falco_rules.yaml -

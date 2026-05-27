@@ -43,9 +43,9 @@ jobs:
         env:
           SPLUNK_PASSWORD: ${{ secrets.SPLUNK_PASSWORD }}
         run: |
-          shopt -s globstar
-          for rule_file in detection/rules/**/*.yml detection/rules/**/*.yaml; do
+          while IFS= read -r rule_file; do
             rule=$(basename "$rule_file" .yml)
+            rule=$(basename "$rule" .yaml)
             SPL=$(sigma convert -t splunk --without-pipeline "$rule_file")
             curl -k -s -u "admin:${SPLUNK_PASSWORD}" \
               "https://splunk-splunk-standalone-service.splunk.svc.cluster.local:8089/services/saved/searches" \
@@ -54,4 +54,4 @@ jobs:
               -d "cron_schedule=*/5 * * * *" \
               -d "dispatch.earliest_time=-5m" \
               -d "dispatch.latest_time=now"
-          done
+          done < <(find detection/rules/ -type f \( -name "*.yml" -o -name "*.yaml" \))
