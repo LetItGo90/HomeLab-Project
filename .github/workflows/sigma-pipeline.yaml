@@ -21,9 +21,6 @@ jobs:
         run: |
           set -euo pipefail
 
-          echo "=== Sigma version ==="
-          sigma --version
-
           echo "=== Pipeline content ==="
           cat detection/pipelines/falco-splunk.yaml
 
