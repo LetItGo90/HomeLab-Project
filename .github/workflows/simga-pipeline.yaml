@@ -53,7 +53,7 @@ jobs:
         env:
           SPLUNK_PASSWORD: ${{ secrets.SPLUNK_PASSWORD }}
         run: |
-          for rule_file in detection/rules/*.yml; do
+          for rule_file in detection/rules/**/*.yml detection/rules/**/*.yaml; do
             rule=$(basename "$rule_file" .yml)
             SPL=$(sigma convert -t splunk "$rule_file")
             curl -k -s -u "admin:${SPLUNK_PASSWORD}" \
