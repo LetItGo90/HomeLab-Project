@@ -20,15 +20,8 @@ jobs:
       - name: Generate savedsearches.conf
         run: |
           set -euo pipefail
-          sed -i 's/\r//' detection/pipelines/falco-splunk.yaml
-          sed -i 's/\r//' detection/rules/falco/*.yaml
-          sigma convert \
-            --target splunk \
-            --without-pipeline \
-            --format savedsearches \
-            detection/rules/falco/ \
-            2>/tmp/sigma-errors.txt | tee /tmp/savedsearches.conf
-          tr '\r' '\n' < /tmp/sigma-errors.txt | grep -v '^$' || true
+          pip install pySigma-backend-splunk -q
+          python3 detection/scripts/convert_splunk.py | tee /tmp/savedsearches.conf
           cat /tmp/savedsearches.conf
           grep -v '^\[default\]' /tmp/savedsearches.conf | grep -q '^\[' || \
             { echo "ERROR: No rules converted"; exit 1; }
