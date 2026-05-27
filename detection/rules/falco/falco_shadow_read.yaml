@@ -15,5 +15,4 @@ detection:
     rule: 'Read sensitive file untrusted'
   condition: selection
 level: high
-
-#placeholder2
+#testing

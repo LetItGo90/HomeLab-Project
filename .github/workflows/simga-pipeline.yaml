@@ -43,6 +43,7 @@ jobs:
         env:
           SPLUNK_PASSWORD: ${{ secrets.SPLUNK_PASSWORD }}
         run: |
+          shopt -s globstar
           for rule_file in detection/rules/**/*.yml detection/rules/**/*.yaml; do
             rule=$(basename "$rule_file" .yml)
             SPL=$(sigma convert -t splunk --without-pipeline "$rule_file")
