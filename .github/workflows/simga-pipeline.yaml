@@ -1,0 +1,65 @@
+name: Detection Pipeline
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'detection/rules/**.yml'
+
+jobs:
+  lint-and-convert:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install sigma-cli and Splunk backend
+        run: |
+          pip install sigma-cli
+          sigma plugin install splunk
+
+      - name: Lint rules
+        run: sigma check detection/rules/
+
+      - name: Convert rules to SPL
+        run: |
+          sigma convert \
+            --target splunk \
+            --format savedsearches \
+            detection/rules/ > /tmp/savedsearches.conf
+
+  test-and-deploy:
+    runs-on: self-hosted
+    environment: production
+    needs: lint-and-convert
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run fixture tests
+        env:
+          SPLUNK_PASSWORD: ${{ secrets.SPLUNK_PASSWORD }}
+          SPLUNK_HEC_TOKEN: ${{ secrets.SPLUNK_HEC_TOKEN }}
+        run: |
+          for rule_file in detection/rules/*.yml; do
+            rule=$(basename "$rule_file" .yml)
+            bash detection/tests/run_test.sh "$rule"
+          done
+
+      - name: Deploy to Splunk
+        if: success()
+        env:
+          SPLUNK_PASSWORD: ${{ secrets.SPLUNK_PASSWORD }}
+        run: |
+          for rule_file in detection/rules/*.yml; do
+            rule=$(basename "$rule_file" .yml)
+            SPL=$(sigma convert -t splunk "$rule_file")
+            curl -k -s -u "admin:${SPLUNK_PASSWORD}" \
+              "https://splunk-splunk-standalone-service.splunk.svc.cluster.local:8089/services/saved/searches" \
+              -d "name=${rule}" \
+              --data-urlencode "search=${SPL}" \
+              -d "cron_schedule=*/5 * * * *" \
+              -d "dispatch.earliest_time=-5m" \
+              -d "dispatch.latest_time=now"
+          done
