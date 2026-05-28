@@ -11,15 +11,16 @@ spec:
     targetRevision: "1.40.2"
     helm:
       valuesObject:
-        clusterName: default
+        clusterName: homelab
         capabilities:
           continuousScan: enable
           prometheusExporter: enable
           runtimeDetection: enable
           vulnerabilityScan: enable
           configurationScan: enable
-        prometheus:
-          enabled: true
+        nodeAgent:
+          config:
+            prometheusExporter: enable
           serviceMonitor:
             enabled: true
   destination:

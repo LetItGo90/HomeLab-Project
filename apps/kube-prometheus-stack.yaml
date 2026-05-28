@@ -38,6 +38,8 @@ spec:
                 memory: 400Mi
               limits:
                 memory: 800Mi
+            podMonitorSelectorNilUsesHelmValues: false
+            serviceMonitorSelectorNilUsesHelmValues: false
         alertmanager:
           enabled: true
         kubeStateMetrics:
