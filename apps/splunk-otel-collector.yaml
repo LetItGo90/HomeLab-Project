@@ -25,10 +25,29 @@ spec:
             enabled: true
           journald:
             enabled: true
+          extraFileLogs:
+            filelog/k8s-audit:
+              include:
+                - /var/log/kubernetes/audit.log
+              start_at: end
+              operators:
+                - type: json_parser
+              resource:
+                com.splunk.sourcetype: "kube:apiserver:audit"
+                com.splunk.index: "k8s-audit"
         clusterReceiver:
           enabled: true
         agent:
           enabled: true
+          extraVolumes:
+            - name: k8s-audit-log
+              hostPath:
+                path: /var/log/kubernetes
+                type: DirectoryOrCreate
+          extraVolumeMounts:
+            - name: k8s-audit-log
+              mountPath: /var/log/kubernetes
+              readOnly: true
   destination:
     server: https://kubernetes.default.svc
     namespace: splunk
