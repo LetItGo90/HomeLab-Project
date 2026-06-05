@@ -11,6 +11,33 @@ spec:
     targetRevision: "0.42.0"
     helm:
       valuesObject:
+        config:
+          pluginsDir: /build/plugins
+        initContainers:
+          - name: kubescape-plugin
+            image: quay.io/kubescape/headlamp-plugin:v0.11.2
+            command:
+              - /bin/sh
+              - '-c'
+              - mkdir -p /build/plugins && cp -r /plugins/* /build/plugins/
+            volumeMounts:
+              - mountPath: /build/plugins
+                name: headlamp-plugins
+          - name: trivy-plugin
+            image: ghcr.io/kubebeam/trivy-headlamp-plugin:v0.3.2
+            command:
+              - /bin/sh
+              - '-c'
+              - mkdir -p /build/plugins && cp -r /plugins/* /build/plugins/
+            volumeMounts:
+              - mountPath: /build/plugins
+                name: headlamp-plugins
+        volumeMounts:
+          - name: headlamp-plugins
+            mountPath: /build/plugins
+        volumes:
+          - name: headlamp-plugins
+            emptyDir: {}
         ingress:
           enabled: true
           ingressClassName: cilium
