@@ -12,12 +12,25 @@ spec:
     helm:
       valuesObject:
         clusterName: homelab
+
+        kubescape:
+          submit: false
+
+        kubescapeScheduler:
+          enabled: true
+          scanSchedule: "0 */4 * * *"
+
+        kubevulnScheduler:
+          enabled: true
+          scanSchedule: "0 */4 * * *"
+
         capabilities:
           continuousScan: enable
           prometheusExporter: enable
           runtimeDetection: enable
           vulnerabilityScan: enable
           configurationScan: enable
+
         nodeAgent:
           config:
             prometheusExporter: enable
@@ -25,6 +38,7 @@ spec:
             enabled: true
             labels:
               release: kube-prometheus-stack
+
   destination:
     server: https://kubernetes.default.svc
     namespace: kubescape
