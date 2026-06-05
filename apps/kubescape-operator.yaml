@@ -12,6 +12,17 @@ spec:
     helm:
       values: |
         clusterName: homelab
+        capabilities:
+          runtimeDetection: enable
+        alertCRD:
+          installDefault: true 
+          scopeClustered: true
+        nodeAgent:
+          config:
+            maxLearningPeriod: 24h
+            learningPeriod: 2m
+            updatePeriod: 10m
+            stdoutExporter: true
         kubescape:
           submit: false
           downloadArtifacts: true
