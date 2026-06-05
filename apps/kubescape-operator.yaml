@@ -7,16 +7,25 @@ spec:
   project: default
   source:
     repoURL: https://kubescape.github.io/helm-charts/
-    chart: kubescape
+    chart: kubescape-operator
     targetRevision: 1.40.2
     helm:
       values: |
+        clusterName: homelab
+        kubescape:
+          submit: false
+          downloadArtifacts: true
         kubescapeScheduler:
+          enabled: true
           scanSchedule: "0 0 * * *"
-          scanJobTimeout: 5m
+        kubevuln:
+          enabled: true
+        kubevulnScheduler:
+          enabled: true
+          scanSchedule: "0 0 * * *"
   destination:
     server: https://kubernetes.default.svc
-    namespace: kubescape 
+    namespace: kubescape
   syncPolicy:
     automated:
       prune: true
