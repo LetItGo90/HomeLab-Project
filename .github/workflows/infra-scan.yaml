@@ -1,0 +1,66 @@
+on:
+  push:
+    paths:
+      - 'infrastructure/**'
+  pull_request:
+    paths:
+      - 'infrastructure/**'
+    
+jobs:
+  kubescape:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    steps:
+    - uses: actions/checkout@v3
+    - uses: kubescape/github-action@main
+      continue-on-error: false
+      with:
+        format: sarif
+        frameworks: nsa,mitre
+        outputFile: results
+    - name: Upload Kubescape scan results to Github Code Scanning
+      uses: github/codeql-action/upload-sarif@v4
+      with:
+        sarif_file: results.sarif
+    
+  trivy:
+    name: Trivy
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: 'config'
+          scan-ref: './infrastructure'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL'
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  gate:
+    needs: [kubescape, trivy]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Check for Kubescape or Trivy scan failures
+        run: |
+          if [[ "${{ needs.kubescape.result }}" == "failure" ]]; then
+            echo "Kubescape scan failed. Please fix the issues before merging."
+            exit 1
+          fi
+          if [[ "${{ needs.trivy.result }}" == "failure" ]]; then
+            echo "Trivy scan failed. Please fix the issues before merging."
+            exit 1
+          fi
+          echo "All scans passed successfully."

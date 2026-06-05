@@ -37,3 +37,4 @@ jobs:
             curl -sk -u admin:${SPLUNK_PASSWORD} \
             -X POST \
             https://localhost:8089/services/configs/conf-savedsearches/_reload
+  
