@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kubescape-operator
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://kubescape.github.io/helm-charts/
+    chart: kubescape
+    targetRevision: 1.40.2
+    helm:
+      values: |
+        kubescapeScheduler:
+          scanSchedule: "0 0 * * *"
+          scanJobTimeout: 5m
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kubescape 
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

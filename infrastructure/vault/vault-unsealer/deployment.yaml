@@ -1,3 +1,4 @@
+# infrastructure/vault/vault-unsealer/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -13,6 +14,12 @@ spec:
       labels:
         app: vault-unsealer
     spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 100  # vault user in the hashicorp/vault image
+        seccompProfile:
+          type: RuntimeDefault
       containers:
       - name: unsealer
         image: hashicorp/vault:1.21.2
@@ -36,3 +43,24 @@ spec:
             secretKeyRef:
               name: vault-unseal-keys
               key: key1
+        resources:
+          requests:
+            cpu: "50m"
+            memory: "64Mi"
+          limits:
+            cpu: "200m"
+            memory: "128Mi"
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 100
+          capabilities:
+            drop:
+            - ALL
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+      volumes:
+      - name: tmp
+        emptyDir: {}
