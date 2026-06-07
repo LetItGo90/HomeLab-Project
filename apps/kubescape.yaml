@@ -15,6 +15,7 @@ spec:
 
         kubescape:
           submit: false
+          downloadArtifacts: false
 
         kubescapeScheduler:
           enabled: true
@@ -30,7 +31,8 @@ spec:
           runtimeDetection: enable
           vulnerabilityScan: enable
           configurationScan: enable
-
+        gateway:
+          enabled: false
         nodeAgent:
           config:
             prometheusExporter: enable
