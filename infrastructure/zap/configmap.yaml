@@ -31,12 +31,12 @@ data:
         progressToStdout: true
       vars: {}
     jobs:
-    - name: openapi
+    - name: spider
+      type: spider
       parameters:
-        apiUrl: http://juice-shop.juice-shop.svc.cluster.local:3000/api-docs
-        targetUrl: http://juice-shop.juice-shop.svc.cluster.local:3000
         context: Default Context
-      type: openapi
+        url: http://juice-shop.juice-shop.svc.cluster.local:3000
+        maxDuration: 5
     - name: activeScan
       parameters:
         context: Default Context
