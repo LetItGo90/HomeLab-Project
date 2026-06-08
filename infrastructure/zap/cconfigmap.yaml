@@ -1,0 +1,92 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/name: zap
+  name: zap-config
+  namespace: zap-demo
+data:
+  af-plan.yaml: |
+    env:
+      contexts:
+      - authentication:
+          parameters: {}
+          verification:
+            method: response
+            pollFrequency: 60
+            pollUnits: seconds
+        includePaths:
+        - http://juice-shop.juice-shop.svc.cluster.local:3000.*
+        name: Default Context
+        sessionManagement:
+          method: cookie
+          parameters: {}
+        technology:
+          exclude: []
+        urls:
+        - http://juice-shop.juice-shop.svc.cluster.local:3000
+      parameters:
+        failOnError: false
+        failOnWarning: false
+        progressToStdout: true
+      vars: {}
+      jobs:
+    - name: openapi
+      parameters:
+        apiUrl: http://juice-shop.juice-shop.svc.cluster.local:3000/api-docs
+        targetUrl: http://juice-shop.juice-shop.svc.cluster.local:3000
+        context: Default Context
+      type: openapi
+    - name: activeScan
+      parameters:
+        context: Default Context
+        maxAlertsPerRule: 0
+        maxRuleDurationInMins: 0
+        maxScanDurationInMins: 0
+        policy: ""
+        threadPerHost: 2
+        user: ""
+      policyDefinition:
+        defaultStrength: medium
+        defaultThreshold: medium
+        rules: []
+      type: activeScan
+    - name: pdf-report
+      parameters:
+        reportDescription: ""
+        reportDir: /zap/reports
+        reportTitle: ZAP Scanning Report
+        template: traditional-pdf
+      risks:
+      - info
+      - low
+      - medium
+      - high
+      confidences:
+      - low
+      - medium
+      - high
+      - confirmed
+      sections:
+      - instancecount
+      - alertdetails
+      - alertcount
+      type: report
+    - name: json-report
+      parameters:
+        template: traditional-json
+        reportDir: /zap/reports
+        reportTitle: ZAP Scanning Report
+        reportDescription: ""
+        displayReport: false
+      risks:
+      - low
+      - medium
+      - high
+      confidences:
+      - low
+      - medium
+      - high
+      - confirmed
+      sites: []
+      type: report
