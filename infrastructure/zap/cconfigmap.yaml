@@ -90,7 +90,3 @@ data:
       - confirmed
       sites: []
       type: report
-    - name: outputSummary
-      type: outputSummary
-      parameters:
-        format: Long
