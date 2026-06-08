@@ -38,11 +38,12 @@ data:
         url: http://juice-shop.juice-shop.svc.cluster.local:3000
         maxDuration: 5
     - name: activeScan
+      type: activeScan
       parameters:
         context: Default Context
         maxAlertsPerRule: 0
         maxRuleDurationInMins: 0
-        maxScanDurationInMins: 0
+        maxScanDurationInMins: 2
         policy: ""
         threadPerHost: 2
         user: ""
@@ -50,43 +51,19 @@ data:
         defaultStrength: medium
         defaultThreshold: medium
         rules: []
-      type: activeScan
-    - name: pdf-report
-      parameters:
-        reportDescription: ""
-        reportDir: /zap/reports
-        reportTitle: ZAP Scanning Report
-        template: traditional-pdf
-      risks:
-      - info
-      - low
-      - medium
-      - high
-      confidences:
-      - low
-      - medium
-      - high
-      - confirmed
-      sections:
-      - instancecount
-      - alertdetails
-      - alertcount
-      type: report
     - name: json-report
+      type: report
       parameters:
         template: traditional-json
-        reportDir: /zap/reports
+        reportDir: /dev/
+        reportFile: stdout
         reportTitle: ZAP Scanning Report
         reportDescription: ""
         displayReport: false
       risks:
-      - low
-      - medium
       - high
       confidences:
-      - low
       - medium
       - high
       - confirmed
       sites: []
-      type: report
