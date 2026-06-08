@@ -94,4 +94,3 @@ data:
       type: outputSummary
       parameters:
         format: Long
-        summaryFile: ""
