@@ -30,7 +30,7 @@ data:
         failOnWarning: false
         progressToStdout: true
       vars: {}
-      jobs:
+    jobs:
     - name: openapi
       parameters:
         apiUrl: http://juice-shop.juice-shop.svc.cluster.local:3000/api-docs
