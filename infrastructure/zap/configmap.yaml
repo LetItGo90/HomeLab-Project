@@ -61,6 +61,7 @@ data:
         reportDescription: ""
         displayReport: false
       risks:
+      - medium
       - high
       confidences:
       - medium
