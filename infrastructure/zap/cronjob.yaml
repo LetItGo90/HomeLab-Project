@@ -17,7 +17,7 @@ spec:
           containers:
           - command: ["/bin/sh", "-c"]
             args:
-            - "./zap.sh -cmd -autorun /zap/config/af-plan.yaml -host 0.0.0.0 -config api.disablekey=true -config 'api.addrs.addr.name=.*' -config api.addrs.addr.regex=true; cat /tmp/zap-report.json"
+            - "./zap.sh -cmd -autorun /zap/config/af-plan.yaml -host 0.0.0.0 -config api.disablekey=true -config 'api.addrs.addr.name=.*' -config api.addrs.addr.regex=true; cat /tmp/zap-report.json | jq -c ."
             image: ghcr.io/zaproxy/zaproxy:stable
             name: zaproxy
             ports:
