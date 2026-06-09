@@ -15,19 +15,9 @@ spec:
             app.kubernetes.io/name: zap
         spec:
           containers:
-          - args:
-            - ./zap.sh
-            - -cmd
-            - -autorun
-            - /zap/config/af-plan.yaml
-            - -host
-            - 0.0.0.0
-            - -config
-            - api.disablekey=true
-            - -config
-            - api.addrs.addr.name=.*
-            - -config
-            - api.addrs.addr.regex=true
+          - command: ["/bin/sh", "-c"]
+            args:
+            - "./zap.sh -cmd -autorun /zap/config/af-plan.yaml -host 0.0.0.0 -config api.disablekey=true -config 'api.addrs.addr.name=.*' -config api.addrs.addr.regex=true; cat /tmp/zap-report.json"
             image: ghcr.io/zaproxy/zaproxy:stable
             name: zaproxy
             ports:
@@ -47,12 +37,8 @@ spec:
             volumeMounts:
             - mountPath: /zap/config
               name: config
-            - mountPath: /zap/reports
-              name: pvc
           restartPolicy: Never
           volumes:
           - name: config
             configMap:
               name: zap-config
-          - name: pvc
-            emptyDir: {}

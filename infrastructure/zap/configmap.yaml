@@ -55,8 +55,8 @@ data:
       type: report
       parameters:
         template: traditional-json
-        reportDir: /dev/
-        reportFile: stdout
+        reportDir: /tmp
+        reportFile: zap-report
         reportTitle: ZAP Scanning Report
         reportDescription: ""
         displayReport: false
