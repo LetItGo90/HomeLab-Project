@@ -13,15 +13,14 @@ spec:
       valuesObject:
         server:
           dev:
-            enabled: false    # never run dev mode, data is lost on restart
+            enabled: false
           ha:
-            enabled: false    # single node homelab, don't need HA
+            enabled: false
           dataStorage:
             enabled: true
             size: 1Gi
         injector:
-          enabled: true       # sidecar that injects secrets into pods
-  destination:
+          enabled: true
     server: https://kubernetes.default.svc
     namespace: vault
   syncPolicy:
