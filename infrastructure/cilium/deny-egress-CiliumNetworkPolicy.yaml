@@ -1,0 +1,13 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: juice-shop-ingress
+  namespace: juice-shop
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/instance: juice-shop
+  ingress:
+  - fromCIDR:
+    - 192.168.44.0/24
+    - 10.42.0.0/24
