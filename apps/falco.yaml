@@ -5,32 +5,37 @@ metadata:
   namespace: argocd
 spec:
   project: default
-  source:
-    repoURL: https://falcosecurity.github.io/charts
-    chart: falco
-    targetRevision: 4.21.2
-    helm:
-      values: |
-        driver:
-          kind: modern_ebpf
-        collectors:
-          enabled: true
-        falcosidekick:
-          enabled: true
-          config:
-            splunk:
-              hostport: "https://splunk-splunk-standalone-service.splunk.svc.cluster.local:8088"
-              token: "595cd2ec-9afb-4613-969e-5f4ff7885b87"
-              checkcert: false
-          serviceMonitor:
+  sources:
+    - repoURL: https://falcosecurity.github.io/charts
+      chart: falco
+      targetRevision: 4.21.2
+      helm:
+        values: |
+          driver:
+            kind: modern_ebpf
+          collectors:
             enabled: true
-            additionalLabels:
-              release: kube-prometheus-stack
-          replicaCount: 1
-          prometheusRules:
+          falcosidekick:
             enabled: true
-          webui:
-            enabled: false
+            config:
+              splunk:
+                hostport: "https://splunk-splunk-standalone-service.splunk.svc.cluster.local:8088"
+                token: "595cd2ec-9afb-4613-969e-5f4ff7885b87"
+                checkcert: false
+            serviceMonitor:
+              enabled: true
+              additionalLabels:
+                release: kube-prometheus-stack
+            replicaCount: 1
+            prometheusRules:
+              enabled: true
+            webui:
+              enabled: false
+        valueFiles:
+          - $values/infrastructure/falco/values.yaml
+    - repoURL: https://github.com/LetItGo90/HomeLab-Project.git
+      targetRevision: HEAD
+      ref: values
   destination:
     server: https://kubernetes.default.svc
     namespace: falco
