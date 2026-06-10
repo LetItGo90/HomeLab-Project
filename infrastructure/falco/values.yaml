@@ -1,41 +1,5 @@
 customRules:
   custom-rules.yaml: |-
     - rule: Run shell untrusted
-      desc: Detects shell spawned by untrusted binaries
-      append: false
-      condition: >
-        spawned_process
-        and shell_procs
-        and proc.pname exists
-        and protected_shell_spawner
-        and not proc.pname in (shell_binaries, gitlab_binaries, cron_binaries, user_known_shell_spawn_binaries,
-                               needrestart_binaries, mesos_shell_binaries,
-                               erl_child_setup, exechealthz,
-                               PM2, PassengerWatchd, c_rehash, svlogd, logrotate, hhvm, serf,
-                               lb-controller, nvidia-installe, runsv, statsite, erlexec, calico-node,
-                               helm, argocd, vault, vault_agent, vault_unsealer,
-                               splunkd, entrypoint.sh, containerd-shim,
-                               "puma reactor")
-        and not proc.cmdline in (known_shell_spawn_cmdlines)
-        and not proc.aname in (unicorn_launche)
-        and not consul_running_net_scripts
-        and not consul_running_alert_checks
-        and not nginx_starting_nginx
-        and not nginx_running_aws_s3_cp
-        and not run_by_package_mgmt_binaries
-        and not serf_script
-        and not check_process_status
-        and not run_by_foreman
-        and not python_mesos_marathon_scripting
-        and not splunk_running_forwarder
-        and not postgres_running_wal_e
-        and not postgres_running_cnpg
-        and not redis_running_prepost_scripts
-        and not rabbitmq_running_scripts
-        and not rabbitmqctl_running_scripts
-        and not run_by_appdynamics
-        and not user_shell_container_exclusions
-        and not k8s.ns.name in (kube-system, argocd)
-      output: Shell spawned by untrusted binary | parent_exe=%proc.pexe parent_exepath=%proc.pexepath pcmdline=%proc.pcmdline gparent=%proc.aname[2] ggparent=%proc.aname[3] aname[4]=%proc.aname[4] aname[5]=%proc.aname[5] aname[6]=%proc.aname[6] aname[7]=%proc.aname[7] evt_type=%evt.type user=%user.name user_uid=%user.uid user_loginuid=%user.loginuid process=%proc.name proc_exepath=%proc.exepath parent=%proc.pname command=%proc.cmdline terminal=%proc.tty exe_flags=%evt.arg.flags
-      priority: NOTICE
-      tags: [maturity_stable, host, container, process, shell, mitre_execution, T1059.004]
+      append: true
+      condition: and not k8s.ns.name in (kube-system, argocd)
