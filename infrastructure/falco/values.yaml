@@ -1,6 +1,7 @@
 customRules:
   custom-rules.yaml: |-
     - rule: Run shell untrusted
+      desc: Detects shell spawned by untrusted binaries
       append: false
       condition: >
         spawned_process
