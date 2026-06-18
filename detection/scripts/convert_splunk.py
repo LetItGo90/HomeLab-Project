@@ -16,6 +16,10 @@ SOURCES = {
     "detection/rules/kube-events/": "kube:events",
 }
 
+INDICES = {
+    "detection/rules/k8s-audit/": "k8s-audit",
+}
+
 all_output = []
 total_rules = 0
 total_dirs_skipped = 0
@@ -30,12 +34,14 @@ for rule_dir, sourcetype in SOURCES.items():
 
     print(f"DEBUG: Converting {len(rule_files)} rule(s) from {rule_dir} with sourcetype={sourcetype}", file=sys.stderr)
 
+    conditions = {"sourcetype": sourcetype}
+    if rule_dir in INDICES:
+        conditions["index"] = INDICES[rule_dir]
+
     pipeline = ProcessingPipeline(
         items=[
             ProcessingItem(
-                transformation=AddConditionTransformation(
-                    {"sourcetype": sourcetype}
-                )
+                transformation=AddConditionTransformation(conditions)
             )
         ]
     )
