@@ -21,6 +21,7 @@ spec:
             size: 1Gi
         injector:
           enabled: true
+  destination:
     server: https://kubernetes.default.svc
     namespace: vault
   syncPolicy:
