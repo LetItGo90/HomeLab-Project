@@ -1,0 +1,31 @@
+apiVersion: cilium.io/v1alpha1
+kind: TracingPolicy
+metadata:
+  name: "suspicious-mount"
+spec:
+  kprobes:
+  - call: "sys_mount"
+    syscall: true
+    args:
+    - index: 0
+      type: "string"
+    - index: 1
+      type: "string"
+    selectors:
+      - matchBinaries:
+        - operator: In
+          values:
+            - "/usr/bin/mount"
+            - "/bin/mount"
+        matchActions:
+          - action: NoPost
+      - matchBinaries:
+        - operator: In
+          values:
+            - "/usr/local/bin/k3s"
+            - "/usr/bin/containerd"
+            - "/usr/bin/runc"
+        matchActions:
+          - action: NoPost
+      - matchActions:
+          - action: Post
