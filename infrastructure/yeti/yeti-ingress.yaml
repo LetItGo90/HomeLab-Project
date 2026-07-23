@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: yeti
+  namespace: yeti
+  annotations:
+    cert-manager.io/cluster-issuer: homelab-ca-issuer
+spec:
+  ingressClassName: cilium
+  tls:
+    - hosts:
+        - yeti.homelab.local
+      secretName: yeti-tls
+  rules:
+    - host: yeti.homelab.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: yeti-api
+                port:
+                  number: 8000

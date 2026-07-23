@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: arangodb
+  namespace: yeti
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: arangodb
+  template:
+    metadata:
+      labels:
+        app: arangodb
+    spec:
+      containers:
+        - name: arangodb
+          image: arangodb:3.11
+          ports:
+            - containerPort: 8529
+          env:
+            - name: ARANGO_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: yeti-secrets
+                  key: arangodb-root-password
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/arangodb3
+          resources:
+            requests:
+              memory: 512Mi
+              cpu: 100m
+            limits:
+              memory: 1500Mi
+              cpu: 500m
+          readinessProbe:
+            httpGet:
+              path: /_api/version
+              port: 8529
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 6
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: arangodb-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: arangodb
+  namespace: yeti
+spec:
+  selector:
+    app: arangodb
+  ports:
+    - port: 8529
+      targetPort: 8529

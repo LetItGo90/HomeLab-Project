@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: yeti
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/LetItGo90/HomeLab-Project.git
+    targetRevision: HEAD
+    path: infrastructure/yeti
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: yeti
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
