@@ -27,7 +27,7 @@ spec:
               echo "ArangoDB ready."
       containers:
         - name: yeti-api
-          image: ghcr.io/yeti-platform/yeti:latest
+          image: yetiplatform/yeti:latest
           args: ["api"]
           ports:
             - containerPort: 8000
