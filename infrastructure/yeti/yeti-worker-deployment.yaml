@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: yeti-worker
-          image: ghcr.io/yeti-platform/yeti:latest
+          image: yetiplatform/yeti:latest
           args: ["worker"]
           envFrom:
             - configMapRef:
@@ -39,7 +39,6 @@ spec:
               memory: 512Mi
               cpu: 500m
 ---
-# Beat handles scheduled feed polling
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -57,7 +56,7 @@ spec:
     spec:
       containers:
         - name: yeti-beat
-          image: ghcr.io/yeti-platform/yeti:latest
+          image: yetiplatform/yeti:latest
           args: ["beat"]
           envFrom:
             - configMapRef:
