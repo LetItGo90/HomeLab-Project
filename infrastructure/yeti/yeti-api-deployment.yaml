@@ -20,7 +20,7 @@ spec:
             - sh
             - -c
             - |
-              until wget -qO- http://arangodb.yeti.svc.cluster.local:8529/_api/version > /dev/null 2>&1; do
+              until wget -qO- http://arangodb.yeti.svc.cluster.local:8529/_admin/server/availability > /dev/null 2>&1; do
                 echo "Waiting for ArangoDB..."
                 sleep 5
               done
@@ -28,7 +28,7 @@ spec:
       containers:
         - name: yeti-api
           image: yetiplatform/yeti:latest
-          args: ["api"]
+          args: ["webserver"]
           ports:
             - containerPort: 8000
           envFrom:

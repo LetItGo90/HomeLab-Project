@@ -16,7 +16,7 @@ spec:
       containers:
         - name: yeti-worker
           image: yetiplatform/yeti:latest
-          args: ["worker"]
+          args: ["tasks"]
           envFrom:
             - configMapRef:
                 name: yeti-config
@@ -57,7 +57,7 @@ spec:
       containers:
         - name: yeti-beat
           image: yetiplatform/yeti:latest
-          args: ["beat"]
+          args: ["tasks-beat"]
           envFrom:
             - configMapRef:
                 name: yeti-config
